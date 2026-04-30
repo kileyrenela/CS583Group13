@@ -101,3 +101,9 @@ InitTestScene*.unity*
 
 .DS_Store
 .vscode/
+
+# Claude Code artifacts
+.claude/
+docs/superpowers/
+CLAUDE.md
+.mcp.json
