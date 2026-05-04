@@ -107,3 +107,5 @@ InitTestScene*.unity*
 docs/superpowers/
 CLAUDE.md
 .mcp.json
+
+.Rhistory
