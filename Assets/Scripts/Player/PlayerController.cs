@@ -113,14 +113,15 @@ public class PlayerController : MonoBehaviour
         float mouseX = lookInput.x * mouseSensitivity;
         float mouseY = lookInput.y * mouseSensitivity;
 
-        // Subtract because mouse-up gives positive Y, but Unity's X-rotation
-        // is negative for "looking up" (right-hand rule).
+        // Consume the delta so it doesn't keep rotating when the mouse stops.
+        // Input System fires OnLook only when delta changes; without this, the
+        // last non-zero delta would persist and spin the view forever.
+        lookInput = Vector2.zero;
+
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -maxLookAngle, maxLookAngle);
 
-        // Pitch the camera only.
         cameraHolder.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        // Yaw the body (and the camera, since it's a child).
         transform.Rotate(Vector3.up * mouseX);
     }
 
@@ -172,22 +173,18 @@ public class PlayerController : MonoBehaviour
     //   3) Behavior set to "Send Messages" but methods named differently than expected
     //   4) Method names below renamed without updating the Inspector binding
 
-    public void OnMove(InputAction.CallbackContext context)
+    public void OnMove(InputValue value)
     {
-        // ReadValue<Vector2>() works for both stick (continuous) and WASD (composite).
-        moveInput = context.ReadValue<Vector2>();
+        moveInput = value.Get<Vector2>();
     }
 
-    public void OnLook(InputAction.CallbackContext context)
+    public void OnLook(InputValue value)
     {
-        lookInput = context.ReadValue<Vector2>();
+        lookInput = value.Get<Vector2>();
     }
 
-    public void OnSprint(InputAction.CallbackContext context)
+    public void OnSprint(InputValue value)
     {
-        // performed = button just pressed (or held in continuous mode).
-        // canceled = button released. Setting both lets us handle hold-to-sprint cleanly.
-        isSprinting = context.performed;
-        if (context.canceled) isSprinting = false;
+        isSprinting = value.isPressed;
     }
 }

@@ -36,11 +36,10 @@ public class PauseMenuUI : MonoBehaviour
         GameManager.Instance.QuitToMenu();
     }
 
-    // Called by the Input System when ESC is pressed.
-    public void OnPause(InputAction.CallbackContext context)
+    // Called by PlayerInput SendMessages when ESC pressed (must live on Player GameObject).
+    public void OnPause(InputValue value)
     {
-        // Only fire on the moment of press (performed), not on hold or release.
-        if (!context.performed) return;
+        if (!value.isPressed) return;
         GameManager.Instance.TogglePause();
     }
 }

@@ -69,14 +69,10 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    // Wired to the "Interact" action via PlayerInput Inspector binding.
-    public void OnInteract(InputAction.CallbackContext context)
+    // Wired via PlayerInput Send Messages mode. Fires once on press.
+    public void OnInteract(InputValue value)
     {
-        // performed = the button was actually pressed this frame (filters out started/canceled).
-        if (!context.performed || !inputEnabled) return;
-
-        // Pass the PlayerController to the interactable so it can manipulate
-        // movement/visibility (e.g., chest disables controller while hiding).
+        if (!value.isPressed || !inputEnabled) return;
         currentTarget?.Interact(GetComponent<PlayerController>());
     }
 
